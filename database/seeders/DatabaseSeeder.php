@@ -32,18 +32,18 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'name' => 'System Admin',
             'usn' => 'ADMIN001',
-            'email' => 'admin@school.app',
+            'email' => 'admin@gmail.com',
             'role' => 'admin',
-            'password' => 'admin123',
+            'password' => 'password',
         ]);
 
         // Create sample moderator (teacher)
         $teacher = User::create([
             'name' => 'Maria Santos',
             'usn' => 'TCH001',
-            'email' => 'maria.santos@school.app',
+            'email' => 'maria.santos@gmail.com',
             'role' => 'moderator',
-            'password' => 'teacher123',
+            'password' => 'password',
         ]);
 
         // Create sample groups for Grade 1 - Section A
