@@ -23,11 +23,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $usn = 'USR' . fake()->unique()->numerify('####');
+
         return [
             'name' => fake()->name(),
+            'usn' => $usn,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => 'student',
+            'grade' => 'Grade ' . fake()->numberBetween(1, 6),
+            'section' => 'Section ' . fake()->randomElement(['A', 'B', 'C']),
             'remember_token' => Str::random(10),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
