@@ -42,7 +42,7 @@ import {
 import InputError from '@/components/input-error';
 import { useInitials } from '@/hooks/use-initials';
 import type { User, PaginatedData } from '@/types/auth';
-import type { BreadcrumbItem, SharedData } from '@/types';
+import type { BreadcrumbItem } from '@/types';
 
 type ClassOption = { grade: string; section: string };
 type Filters = { role?: string; grade?: string; section?: string; search?: string };
@@ -66,7 +66,7 @@ const roleBadgeVariant: Record<string, 'default' | 'secondary' | 'outline'> = {
 
 export default function UserManagement({ users, classes, filters }: Props) {
     const getInitials = useInitials();
-    const { flash } = usePage<SharedData>().props;
+    const { flash } = usePage().props;
     const [search, setSearch] = useState(filters.search ?? '');
     const [addOpen, setAddOpen] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
