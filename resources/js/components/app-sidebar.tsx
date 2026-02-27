@@ -1,6 +1,12 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
-import { NavFooter } from '@/components/nav-footer';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    LayoutGrid,
+    PenSquare,
+    Users2,
+    UserCircle,
+    Shield,
+    UsersRound,
+} from 'lucide-react';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -14,37 +20,56 @@ import {
 } from '@/components/ui/sidebar';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
-import { dashboard } from '@/routes';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
 
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const role = auth.user.role;
+
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Create Post',
+            href: '/posts/create',
+            icon: PenSquare,
+        },
+        {
+            title: 'My Groups',
+            href: '/groups',
+            icon: UsersRound,
+        },
+        {
+            title: 'Profile',
+            href: '/settings/profile',
+            icon: UserCircle,
+        },
+    ];
+
+    // Admin and moderator can see User Management
+    if (role === 'admin') {
+        mainNavItems.push({
+            title: 'User Management',
+            href: '/user-management',
+            icon: Users2,
+        });
+
+        mainNavItems.push({
+            title: 'Moderation',
+            href: '/moderation',
+            icon: Shield,
+        });
+    }
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href="/dashboard" prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -57,7 +82,6 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
