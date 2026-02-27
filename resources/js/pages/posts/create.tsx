@@ -110,7 +110,7 @@ export default function CreatePost({ groups }: Props) {
                                 <Textarea
                                     id="content"
                                     value={content}
-                                    onChange={(e) =>
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                                         setContent(e.target.value)
                                     }
                                     placeholder="What's on your mind?"
