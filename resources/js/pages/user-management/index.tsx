@@ -94,9 +94,9 @@ export default function UserManagement({ users, classes, filters }: Props) {
     }
 
     function setFilter(key: string, value: string) {
-        const newFilters = { ...filters, [key]: value || undefined };
+        const newFilters = { ...filters, [key]: value === 'all' ? undefined : value };
         if (key === 'class') {
-            if (value) {
+            if (value && value !== 'all') {
                 const [grade, section] = value.split('||');
                 newFilters.grade = grade;
                 newFilters.section = section;
@@ -362,14 +362,14 @@ export default function UserManagement({ users, classes, filters }: Props) {
                         />
                     </form>
                     <Select
-                        value={filters.role ?? ''}
+                        value={filters.role ?? 'all'}
                         onValueChange={(v) => setFilter('role', v)}
                     >
                         <SelectTrigger className="w-[150px]">
                             <SelectValue placeholder="All Roles" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Roles</SelectItem>
+                            <SelectItem value="all">All Roles</SelectItem>
                             <SelectItem value="admin">Admin</SelectItem>
                             <SelectItem value="moderator">Moderator</SelectItem>
                             <SelectItem value="student">Student</SelectItem>
@@ -379,7 +379,7 @@ export default function UserManagement({ users, classes, filters }: Props) {
                         value={
                             filters.grade && filters.section
                                 ? `${filters.grade}||${filters.section}`
-                                : ''
+                                : 'all'
                         }
                         onValueChange={(v) => setFilter('class', v)}
                     >
@@ -387,7 +387,7 @@ export default function UserManagement({ users, classes, filters }: Props) {
                             <SelectValue placeholder="All Classes" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Classes</SelectItem>
+                            <SelectItem value="all">All Classes</SelectItem>
                             {classes.map((c) => (
                                 <SelectItem
                                     key={`${c.grade}-${c.section}`}
