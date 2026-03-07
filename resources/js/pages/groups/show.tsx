@@ -1,11 +1,17 @@
 import { Head, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { MessageCircle, Heart, Users, ArrowLeft } from 'lucide-react';
+import { MessageCircle, Heart, Users, ArrowLeft, MoreHorizontal, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { useInitials } from '@/hooks/use-initials';
 import type { Group, Post, PaginatedData } from '@/types/auth';
@@ -54,6 +60,11 @@ function PostCard({ post }: { post: Post }) {
         );
     }
 
+    function handleDelete() {
+        if (!confirm('Delete this post?')) return;
+        router.delete(`/posts/${post.id}`, { preserveScroll: true });
+    }
+
     return (
         <Card className="mb-4 overflow-hidden border-border/50 shadow-sm">
             <CardContent className="p-4">
@@ -78,6 +89,24 @@ function PostCard({ post }: { post: Post }) {
                             {timeAgo(post.created_at)}
                         </span>
                     </div>
+                    {(auth.user.role === 'admin' || post.user_id === auth.user.id) && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="text-muted-foreground hover:text-foreground transition-colors">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onClick={handleDelete}
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Delete Post
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
 
                 <p className="mt-3 text-sm leading-relaxed">{post.content}</p>
