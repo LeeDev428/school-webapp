@@ -17,11 +17,18 @@ class ModerationController extends Controller
     public function index(Request $request): Response
     {
         $tab = $request->get('tab', 'all');
+        $user = $request->user();
 
         $postsQuery = Post::with([
             'user:id,name,role,grade,section,profile_photo_path',
             'group:id,name',
         ])->latest();
+
+        // Moderators can only review posts from their assigned groups
+        if ($user->isModerator()) {
+            $groupIds = $user->moderatedGroups()->pluck('id');
+            $postsQuery->whereIn('group_id', $groupIds);
+        }
 
         $posts = match ($tab) {
             'system' => $postsQuery->where('status', 'flagged')->where('flag_type', 'system')->paginate(10),
@@ -29,12 +36,15 @@ class ModerationController extends Controller
             default => $postsQuery->paginate(10),
         };
 
-        $keywords = FilteredKeyword::with('creator:id,name')->latest()->get();
+        $keywords = $user->isAdmin()
+            ? FilteredKeyword::with('creator:id,name')->latest()->get()
+            : collect();
 
         return Inertia::render('moderation/index', [
             'posts' => $posts,
             'keywords' => $keywords,
             'activeTab' => $tab,
+            'isAdmin' => $user->isAdmin(),
         ]);
     }
 
@@ -43,6 +53,14 @@ class ModerationController extends Controller
      */
     public function approve(Post $post): RedirectResponse
     {
+        $user = request()->user();
+        if ($user->isModerator()) {
+            abort_unless(
+                $user->moderatedGroups()->pluck('id')->contains($post->group_id),
+                403
+            );
+        }
+
         $post->update([
             'status' => 'approved',
             'flag_type' => null,
@@ -56,6 +74,14 @@ class ModerationController extends Controller
      */
     public function delete(Post $post): RedirectResponse
     {
+        $user = request()->user();
+        if ($user->isModerator()) {
+            abort_unless(
+                $user->moderatedGroups()->pluck('id')->contains($post->group_id),
+                403
+            );
+        }
+
         $post->update(['status' => 'deleted']);
 
         return back();
@@ -66,6 +92,14 @@ class ModerationController extends Controller
      */
     public function flag(Post $post): RedirectResponse
     {
+        $user = request()->user();
+        if ($user->isModerator()) {
+            abort_unless(
+                $user->moderatedGroups()->pluck('id')->contains($post->group_id),
+                403
+            );
+        }
+
         $post->update([
             'status' => 'flagged',
             'flag_type' => 'manual',
