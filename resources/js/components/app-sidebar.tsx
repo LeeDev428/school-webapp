@@ -48,14 +48,17 @@ export function AppSidebar() {
         },
     ];
 
-    // Admin and moderator can see User Management
+    // Admin only: User Management
     if (role === 'admin') {
         mainNavItems.push({
             title: 'User Management',
             href: '/user-management',
             icon: Users2,
         });
+    }
 
+    // Admin and moderator: Moderation panel
+    if (role === 'admin' || role === 'moderator') {
         mainNavItems.push({
             title: 'Moderation',
             href: '/moderation',
