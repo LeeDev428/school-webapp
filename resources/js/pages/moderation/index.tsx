@@ -27,6 +27,7 @@ type Props = {
     posts: PaginatedData<Post>;
     keywords: FilteredKeyword[];
     activeTab: string;
+    isAdmin: boolean;
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -50,7 +51,7 @@ const tabs = [
     { key: 'manual', label: 'Manually Flagged', icon: Hand },
 ] as const;
 
-export default function Moderation({ posts, keywords, activeTab }: Props) {
+export default function Moderation({ posts, keywords, activeTab, isAdmin }: Props) {
     const getInitials = useInitials();
     const [newKeyword, setNewKeyword] = useState('');
     const [keywordError, setKeywordError] = useState('');
@@ -265,7 +266,8 @@ export default function Moderation({ posts, keywords, activeTab }: Props) {
                     )}
                 </div>
 
-                {/* Sidebar - Keyword Filter */}
+                {/* Sidebar - Keyword Filter (admin only) */}
+                {isAdmin && (
                 <div className="w-full lg:w-72 flex-shrink-0">
                     <Card className="sticky top-6">
                         <CardContent className="p-4">
@@ -327,6 +329,7 @@ export default function Moderation({ posts, keywords, activeTab }: Props) {
                         </CardContent>
                     </Card>
                 </div>
+                )}
             </div>
         </AppLayout>
     );
