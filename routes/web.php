@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     // Profile (handled in settings.php)
 });
 
-// Admin routes
+// Admin-only routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // User Management
     Route::get('user-management', [UserManagementController::class, 'index'])->name('user-management.index');
@@ -42,13 +42,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('user-management/{user}', [UserManagementController::class, 'destroy'])->name('user-management.destroy');
     Route::post('user-management/upload', [UserManagementController::class, 'uploadList'])->name('user-management.upload');
 
-    // Moderation
+    // Keyword management (admin only)
+    Route::post('moderation/keywords', [ModerationController::class, 'addKeyword'])->name('moderation.add-keyword');
+    Route::delete('moderation/keywords/{keyword}', [ModerationController::class, 'removeKeyword'])->name('moderation.remove-keyword');
+});
+
+// Admin and Moderator routes
+Route::middleware(['auth', 'role:admin,moderator'])->group(function () {
     Route::get('moderation', [ModerationController::class, 'index'])->name('moderation.index');
     Route::post('moderation/{post}/approve', [ModerationController::class, 'approve'])->name('moderation.approve');
     Route::post('moderation/{post}/delete', [ModerationController::class, 'delete'])->name('moderation.delete');
     Route::post('moderation/{post}/flag', [ModerationController::class, 'flag'])->name('moderation.flag');
-    Route::post('moderation/keywords', [ModerationController::class, 'addKeyword'])->name('moderation.add-keyword');
-    Route::delete('moderation/keywords/{keyword}', [ModerationController::class, 'removeKeyword'])->name('moderation.remove-keyword');
 });
 
 require __DIR__.'/settings.php';
