@@ -531,3 +531,142 @@ tbody tr:hover { background: rgba(13,148,136,.03); }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .lg-row { display: flex; flex-direction: column; gap: 24px; }
 @media(min-width:900px){ .lg-row { flex-direction: row; } }
+
+/* ─────────────────────────────────────────────────────────────
+   ADDITIONAL COMPONENTS (added for remaining pages)
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Badge variants ─────────────────────────────────────────── */
+.badge-admin   { background: #ede9fe; color: #6d28d9; }
+.badge-mod     { background: #dbeafe; color: #1d4ed8; }
+.badge-student { background: #f0fdf4; color: #15803d; }
+.badge-error   { background: var(--red-bg); color: var(--red); }
+.badge-warn    { background: var(--amber-bg); color: var(--amber); }
+.badge-success { background: var(--green-bg); color: var(--green); }
+
+/* ── Button variants ────────────────────────────────────────── */
+.btn-success {
+  background: var(--green); color: #fff; border-color: var(--green);
+}
+.btn-success:hover { background: #15803d; border-color: #15803d; }
+.btn-warn {
+  background: var(--amber); color: #fff; border-color: var(--amber);
+}
+.btn-warn:hover { background: #b45309; border-color: #b45309; }
+.btn-xs {
+  padding: 3px 8px; font-size: 11px; border-radius: calc(var(--radius) - 2px);
+}
+
+/* ── flex-wrap helper ───────────────────────────────────────── */
+.flex-wrap { flex-wrap: wrap; }
+
+/* ── Text helpers ───────────────────────────────────────────── */
+.text-success { color: var(--green); }
+
+/* ── Profile layout ─────────────────────────────────────────── */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .profile-layout { grid-template-columns: 1fr; }
+}
+.profile-avatar-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+.avatar-xl {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 700; flex-shrink: 0;
+}
+.profile-name { font-size: 17px; font-weight: 600; text-align: center; }
+.profile-meta { text-align: center; }
+.photo-btn { font-size: 12px; }
+
+/* ── Moderation layout ──────────────────────────────────────── */
+.moderation-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .moderation-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Keyword chips ──────────────────────────────────────────── */
+.kw-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--muted); border: 1px solid var(--border);
+  border-radius: 99px; padding: 3px 10px; font-size: 12px;
+  color: var(--fg); margin: 3px;
+}
+.kw-chip button {
+  background: none; border: none; cursor: pointer;
+  padding: 0; color: var(--muted-fg); display: flex; align-items: center;
+}
+.kw-chip button:hover { color: var(--red); }
+
+/* ── File drop zone ─────────────────────────────────────────── */
+.file-drop-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius-lg);
+  padding: 28px 16px; text-align: center; cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.file-drop-zone:hover { border-color: var(--primary); background: var(--primary-light); }
+.file-drop-text { font-size: 13px; font-weight: 500; margin-top: 8px; color: var(--fg); }
+.file-drop-sub  { font-size: 11px; color: var(--muted-fg); margin-top: 4px; }
+.file-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--muted); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 4px 10px; font-size: 12px;
+}
+.file-chip button { background: none; border: none; cursor: pointer; color: var(--muted-fg); display: flex; align-items: center; }
+.file-chip button:hover { color: var(--red); }
+
+/* ── Announcement row on create-post ───────────────────────── */
+.announcement-row { padding: 12px; background: var(--primary-light); border-radius: var(--radius); }
+.checkbox-label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.checkbox { width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+
+/* ── Filters row ────────────────────────────────────────────── */
+.filters-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.filters-row .input { flex: 1; min-width: 140px; }
+
+/* ── Table footer (pagination row) ─────────────────────────── */
+.table-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; border-top: 1px solid var(--border); font-size: 12px;
+}
+
+/* ── Form row (two-col form) ────────────────────────────────── */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+/* ── Required / optional labels ────────────────────────────── */
+.required { color: var(--red); margin-left: 2px; }
+.optional  { color: var(--muted-fg); font-size: 11px; font-weight: 400; }
+
+/* ── Alert blocks ───────────────────────────────────────────── */
+.alert { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; }
+.alert-error { background: var(--red-bg); color: var(--red); border: 1px solid #fca5a5; }
+
+/* ── Sidebar overlay for mobile ─────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99;
+}
+.sidebar-overlay.show { display: block; }
+
+/* ── Breadcrumb ─────────────────────────────────────────────── */
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.breadcrumb a { color: var(--muted-fg); text-decoration: none; }
+.breadcrumb a:hover { color: var(--fg); }
+.breadcrumb-sep { color: var(--muted-fg); }
+.breadcrumb-current { color: var(--fg); font-weight: 500; }
