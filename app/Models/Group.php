@@ -44,6 +44,14 @@ class Group extends Model
     }
 
     /**
+     * Get chat messages in this group.
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(GroupMessage::class);
+    }
+
+    /**
      * Get total member count including moderator.
      */
     public function getTotalMembersAttribute(): int
