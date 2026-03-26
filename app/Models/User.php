@@ -124,6 +124,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get chat messages created by the user.
+     */
+    public function groupMessages(): HasMany
+    {
+        return $this->hasMany(GroupMessage::class);
+    }
+
+    /**
      * Get all groups accessible to this user (member + moderated).
      */
     public function allGroups(): \Illuminate\Database\Eloquent\Collection
