@@ -31,8 +31,20 @@ export type Group = {
     section: string;
     moderator_id: number | null;
     moderator?: User;
+    members?: User[];
+    messages?: GroupMessage[];
     members_count?: number;
     posts?: Post[];
+    created_at: string;
+    updated_at: string;
+};
+
+export type GroupMessage = {
+    id: number;
+    group_id: number;
+    user_id: number;
+    message: string;
+    user?: User;
     created_at: string;
     updated_at: string;
 };
