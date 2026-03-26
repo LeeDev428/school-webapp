@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import InputError from '@/components/input-error';
 import { useInitials } from '@/hooks/use-initials';
+import { roleBadgeClass, roleLabel } from '@/lib/roles';
 import type { User, PaginatedData } from '@/types/auth';
 import type { BreadcrumbItem } from '@/types';
 
@@ -57,12 +58,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'User Management', href: '/user-management' },
 ];
-
-const roleBadgeVariant: Record<string, 'default' | 'secondary' | 'outline'> = {
-    admin: 'default',
-    moderator: 'secondary',
-    student: 'outline',
-};
 
 export default function UserManagement({ users, classes, filters }: Props) {
     const getInitials = useInitials();
@@ -446,14 +441,10 @@ export default function UserManagement({ users, classes, filters }: Props) {
                                         </td>
                                         <td className="p-3">
                                             <Badge
-                                                variant={
-                                                    roleBadgeVariant[
-                                                        user.role
-                                                    ] ?? 'outline'
-                                                }
-                                                className="text-xs capitalize"
+                                                variant="outline"
+                                                className={`text-xs capitalize ${roleBadgeClass(user.role)}`}
                                             >
-                                                {user.role}
+                                                {roleLabel(user.role)}
                                             </Badge>
                                         </td>
                                         <td className="p-3 text-muted-foreground">
