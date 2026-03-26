@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FilteredKeyword;
+use App\Models\Group;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +20,17 @@ class PostController extends Controller
     public function create(Request $request): Response
     {
         $user = $request->user();
+
+        $group = Group::findOrFail($request->integer('group_id'));
+
+        if (! $user->isAdmin()) {
+            $isMember = $group->members()->where('user_id', $user->id)->exists();
+            $isModerator = $group->moderator_id === $user->id;
+
+            if (! $isMember && ! $isModerator) {
+                abort(403);
+            }
+        }
         $groups = $user->allGroups();
 
         return Inertia::render('posts/create', [
@@ -59,7 +71,7 @@ class PostController extends Controller
 
         $post = Post::create([
             'user_id' => $user->id,
-            'group_id' => $request->group_id,
+            'group_id' => $group->id,
             'content' => $request->content,
             'is_announcement' => $isAnnouncement,
             'status' => $status,
