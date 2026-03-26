@@ -1,6 +1,6 @@
 import { Head, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { MessageCircle, Heart, Megaphone, ChevronRight, MoreHorizontal, Trash2 } from 'lucide-react';
+import { MessageCircle, Heart, Megaphone, ChevronRight, MoreHorizontal, Trash2, Flag } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useInitials } from '@/hooks/use-initials';
+import { roleBadgeClass, roleLabel } from '@/lib/roles';
 import type { Post, PaginatedData } from '@/types/auth';
 import type { BreadcrumbItem } from '@/types';
 
@@ -69,6 +70,14 @@ function PostCard({ post }: { post: Post }) {
         router.delete(`/posts/${post.id}`, { preserveScroll: true });
     }
 
+    function handleFlag() {
+        if (!confirm('Flag this post for moderation?')) return;
+        router.post(`/moderation/${post.id}/flag`, {}, { preserveScroll: true });
+    }
+
+    const canFlag = auth.user.role === 'admin' ||
+        (auth.user.role === 'moderator' && post.group?.moderator_id === auth.user.id);
+
     return (
         <Card className="mb-4 overflow-hidden border-border/50 shadow-sm">
             <CardContent className="p-4">
@@ -90,20 +99,9 @@ function PostCard({ post }: { post: Post }) {
                             <span className="font-medium text-sm">
                                 {post.user?.name}
                             </span>
-                            {post.user?.role === 'moderator' && (
-                                <Badge
-                                    variant="secondary"
-                                    className="text-xs px-1.5 py-0"
-                                >
-                                    {post.user?.grade} - {post.user?.section}
-                                </Badge>
-                            )}
-                            {post.user?.role === 'admin' && (
-                                <Badge
-                                    variant="default"
-                                    className="text-xs px-1.5 py-0"
-                                >
-                                    Admin
+                            {post.user?.role && (
+                                <Badge variant="outline" className={`text-xs px-1.5 py-0 ${roleBadgeClass(post.user.role)}`}>
+                                    {roleLabel(post.user.role)}
                                 </Badge>
                             )}
                         </div>
@@ -137,6 +135,12 @@ function PostCard({ post }: { post: Post }) {
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete Post
                                 </DropdownMenuItem>
+                                {canFlag && (
+                                    <DropdownMenuItem onClick={handleFlag}>
+                                        <Flag className="w-4 h-4 mr-2" />
+                                        Flag Post
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     )}
