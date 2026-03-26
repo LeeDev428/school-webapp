@@ -45,7 +45,14 @@ class GroupController extends Controller
         }
 
         $group->loadCount('members');
-        $group->load('moderator:id,name');
+        $group->load([
+            'moderator:id,name',
+            'members:id,name,usn,profile_photo_path,grade,section,role',
+            'messages' => fn ($q) => $q
+                ->with('user:id,name,profile_photo_path')
+                ->latest()
+                ->limit(50),
+        ]);
 
         $posts = Post::with([
             'user:id,name,role,grade,section,profile_photo_path',
