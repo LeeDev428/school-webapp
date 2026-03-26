@@ -1,6 +1,6 @@
 import { Head, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { MessageCircle, Heart, Users, ArrowLeft, MoreHorizontal, Trash2 } from 'lucide-react';
+import { MessageCircle, Heart, Users, ArrowLeft, MoreHorizontal, Trash2, SendHorizonal } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -182,6 +182,25 @@ function PostCard({ post }: { post: Post }) {
 }
 
 export default function GroupShow({ group, posts }: Props) {
+    const getInitials = useInitials();
+    const [chatMessage, setChatMessage] = useState('');
+
+    const chatMessages = [...(group.messages ?? [])].reverse();
+
+    function handleSendChat(e: React.FormEvent) {
+        e.preventDefault();
+        if (!chatMessage.trim()) return;
+
+        router.post(
+            `/groups/${group.id}/messages`,
+            { message: chatMessage },
+            {
+                preserveScroll: true,
+                onSuccess: () => setChatMessage(''),
+            },
+        );
+    }
+
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'My Groups', href: '/groups' },
@@ -238,6 +257,107 @@ export default function GroupShow({ group, posts }: Props) {
                         </div>
                     )}
                 </div>
+
+                {/* Members List */}
+                <Card className="overflow-hidden border-border/50 shadow-sm">
+                    <CardContent className="p-4">
+                        <h3 className="text-sm font-semibold mb-3">
+                            Group Members
+                        </h3>
+                        {group.members && group.members.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {group.members.map((member) => (
+                                    <div
+                                        key={member.id}
+                                        className="flex items-center gap-2 rounded-md border border-border/60 px-2.5 py-2"
+                                    >
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage
+                                                src={
+                                                    member.profile_photo_path
+                                                        ? `/storage/${member.profile_photo_path}`
+                                                        : undefined
+                                                }
+                                            />
+                                            <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                                                {getInitials(member.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-medium truncate">
+                                                {member.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground truncate">
+                                                {member.usn}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">
+                                No members listed.
+                            </p>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Group Chat */}
+                <Card className="overflow-hidden border-border/50 shadow-sm">
+                    <CardContent className="p-4">
+                        <h3 className="text-sm font-semibold mb-3">Group Chat</h3>
+                        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            {chatMessages.length > 0 ? (
+                                chatMessages.map((msg) => (
+                                    <div key={msg.id} className="flex items-start gap-2 rounded-md bg-muted/40 p-2">
+                                        <Avatar className="h-7 w-7">
+                                            <AvatarImage
+                                                src={
+                                                    msg.user?.profile_photo_path
+                                                        ? `/storage/${msg.user.profile_photo_path}`
+                                                        : undefined
+                                                }
+                                            />
+                                            <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                                                {getInitials(msg.user?.name ?? '')}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-xs font-medium truncate">
+                                                    {msg.user?.name}
+                                                </p>
+                                                <span className="text-[11px] text-muted-foreground">
+                                                    {timeAgo(msg.created_at)}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm leading-relaxed break-words">
+                                                {msg.message}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-sm text-muted-foreground">
+                                    No messages yet. Start the conversation.
+                                </p>
+                            )}
+                        </div>
+
+                        <form onSubmit={handleSendChat} className="mt-3 flex gap-2">
+                            <Input
+                                value={chatMessage}
+                                onChange={(e) => setChatMessage(e.target.value)}
+                                placeholder="Type a message..."
+                                className="h-9"
+                            />
+                            <Button type="submit" size="sm" className="h-9">
+                                <SendHorizonal className="w-4 h-4 mr-1" />
+                                Send
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
 
                 {/* Pagination */}
                 {posts.last_page > 1 && (
