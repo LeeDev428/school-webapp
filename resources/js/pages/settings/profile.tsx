@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { useInitials } from '@/hooks/use-initials';
+import { roleBadgeClass, roleLabel } from '@/lib/roles';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -120,22 +121,16 @@ export default function Profile({ status }: { status?: string }) {
                                         />
                                     </label>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h3 className="font-semibold text-lg">
                                         {user.name}
                                     </h3>
                                     <div className="flex items-center gap-2 mt-0.5">
                                         <Badge
-                                            variant={
-                                                user.role === 'admin'
-                                                    ? 'default'
-                                                    : user.role === 'moderator'
-                                                      ? 'secondary'
-                                                      : 'outline'
-                                            }
-                                            className="text-xs capitalize"
+                                            variant="outline"
+                                            className={`text-xs capitalize ${roleBadgeClass(user.role)}`}
                                         >
-                                            {user.role}
+                                            {roleLabel(user.role)}
                                         </Badge>
                                         {user.grade && user.section && (
                                             <span className="text-xs text-muted-foreground">
@@ -148,7 +143,7 @@ export default function Profile({ status }: { status?: string }) {
 
                             <Separator className="my-4" />
 
-                            <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                 <div>
                                     <span className="text-muted-foreground">
                                         USN
