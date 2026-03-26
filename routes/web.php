@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\ModerationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserManagementController;
@@ -28,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     // Groups
     Route::get('groups', [GroupController::class, 'index'])->name('groups.index');
     Route::get('groups/{group}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('groups/{group}/messages', [GroupMessageController::class, 'store'])->name('groups.messages.store');
 
     // Profile (handled in settings.php)
 });
